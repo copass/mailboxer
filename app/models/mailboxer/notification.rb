@@ -23,8 +23,8 @@ class Mailboxer::Notification < ActiveRecord::Base
     joins(:receipts).where('mailboxer_receipts.is_read' => false)
   }
   scope :global, lambda { where(:global => true) }
-  scope :expired, lambda { where("mailboxer_notifications.expires < ?", Time.now) }
-  scope :unexpired, lambda {
+  scope :expired, lambda { unscoped.where("mailboxer_notifications.expires < ?", Time.now) }
+  default_scope lambda {
     where("mailboxer_notifications.expires is NULL OR mailboxer_notifications.expires > ?", Time.now)
   }
 
@@ -54,20 +54,20 @@ class Mailboxer::Notification < ActiveRecord::Base
     end
   end
 
-  def expired?
-    self.expires.present? && (self.expires < Time.now)
+  def expired?(delay = 0)
+    self.expires.present? && (self.expires < Time.now + delay)
   end
 
-  def expire!
+  def expire!(delay = 0)
     unless self.expired?
       self.expire
       self.save
     end
   end
 
-  def expire
+  def expire(delay = 0)
     unless self.expired?
-      self.expires = Time.now - 1.second
+      self.expires = Time.now - 1.second + delay
     end
   end
 
