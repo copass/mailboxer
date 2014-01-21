@@ -59,15 +59,13 @@ class Mailboxer::Notification < ActiveRecord::Base
   end
 
   def expire!(delay = 0)
-    unless self.expired?
-      self.expire
-      self.save
-    end
+    self.expire = Time.now - 1.second + delay
+    self.save
   end
 
   def expire(delay = 0)
-    unless self.expired?
-      self.expires = Time.now - 1.second + delay
+    if !self.expires.nil?
+      self.expire!
     end
   end
 
