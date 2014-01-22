@@ -7,7 +7,7 @@ class Mailboxer::Conversation < ActiveRecord::Base
   has_many :receipts, :through => :messages, :class_name => "Mailboxer::Receipt"
 
   validates_presence_of :subject
-  validates_presence_of :messages
+  # validates_presence_of :messages
 
 
   before_validation :clean
