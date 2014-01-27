@@ -1,4 +1,4 @@
-class Mailboxer::notification < ActiveRecord::Base
+class Mailboxer::Notification < ActiveRecord::Base
   self.table_name = :mailboxer_notifications
 
   attr_accessor :recipients
