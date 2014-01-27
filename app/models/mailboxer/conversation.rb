@@ -100,8 +100,11 @@ class Mailboxer::Conversation < ActiveRecord::Base
     messages = self.messages
     if participant
       messages = messages.where('sender_id != ?', participant.id)
+      if messages.count == 0
+        messages = self.messages
+      end
     end
-    @last_message ||= (messages || self.messages).order('created_at DESC').first
+    @last_message ||= messages.order('created_at DESC').first
   end
 
   #Returns the receipts of the conversation for one participants
