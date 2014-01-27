@@ -91,13 +91,17 @@ class Mailboxer::Conversation < ActiveRecord::Base
   end
 
   #Sender of the last message.
-  def last_sender
-    @last_sender ||= self.last_message.sender
+  def last_sender(participant=nil)
+    @last_sender ||= self.last_message(participant).sender
   end
 
   #Last message in the conversation.
-  def last_message
-    @last_message ||= self.messages.order('created_at DESC').first
+  def last_message(participant=nil)
+    messages = self.messages
+    if participant
+      messages = messages.where('sender_id IS NOT ?', participant.id)
+    end
+    @last_message ||= messages.order('created_at DESC').first
   end
 
   #Returns the receipts of the conversation for one participants
