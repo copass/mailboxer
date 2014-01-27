@@ -1,4 +1,4 @@
-class Mailboxer::Notification < ActiveRecord::Base
+class Mailboxer::notification < ActiveRecord::Base
   self.table_name = :mailboxer_notifications
 
   attr_accessor :recipients
@@ -59,7 +59,7 @@ class Mailboxer::Notification < ActiveRecord::Base
   end
 
   def expire!(delay = 0)
-    self.expire = Time.now - 1.second + delay
+    self.expires = Time.now - 1.second + delay
     self.save
   end
 
