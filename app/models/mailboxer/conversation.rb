@@ -99,7 +99,7 @@ class Mailboxer::Conversation < ActiveRecord::Base
   def last_message(participant=nil)
     messages = self.messages
     if participant
-      messages = messages.where('sender_id IS NOT ?', participant.id)
+      messages = messages.where('sender_id != ?', participant.id)
     end
     @last_message ||= messages.order('created_at DESC').first
   end
