@@ -25,7 +25,7 @@ class Mailboxer::Notification < ActiveRecord::Base
   scope :global, lambda { where(:global => true) }
   scope :expired, lambda { unscoped.where("mailboxer_notifications.expires < ?", Time.now) }
   default_scope lambda {
-    where("mailboxer_notifications.expires is NULL OR mailboxer_notifications.expires > ?", Time.now)
+    where("conversation_id IS NOT NULL OR (mailboxer_notifications.expires is NULL OR mailboxer_notifications.expires > ?)", Time.now)
   }
 
   class << self
